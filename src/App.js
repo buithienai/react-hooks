@@ -1,61 +1,41 @@
-import React, { useReducer, useState } from 'react';
+import React, { Component } from 'react';
+import Modal from './Modal';
 import './App.css';
 
-function init(initialCount) {
-	return { count: initialCount };
-}
+class App extends Component {
+	constructor(props) {
+		super(props);
 
-function reducer(state, action) {
-	switch (action.type) {
-		case 'increment':
-			return { count: state.count + 1 };
-		case 'decrement':
-			return { count: state.count - 1 };
-		case 'reset':
-			return init(1);
-		default:
-			throw new Error();
-	}
-}
-
-function App({ initialCount }) {
-	const [state, dispatch] = useReducer(reducer, 1, init);
-	const [name, setName] = useState('');
-	const [errorName, setErrorName] = useState(false);
-
-	const handleChangeName = (value) => {
-		setName(value);
-		setErrorName(false);
-	}
-
-	const handleSubmit = () => {
-		if (name.length === 0) {
-			setErrorName(true);
-			return;
+		this.state = {
+			isModal: false,
+			name: 'thien ai',
+			address: 'da nang'
 		}
-
-		console.log(name);
 	}
 
-	return (
-		<>
-			Count: {state.count}
-			<button
-				onClick={() => dispatch({ type: 'reset', payload: initialCount })}>
-				Reset
-			</button>
-			<button onClick={() => dispatch({ type: 'decrement' })}>-</button>
-			<button onClick={() => dispatch({ type: 'increment' })}>+</button>
+	handleChange = (data) => {
+		this.setState({
+			...data
+		});
+	}
 
-			<div className={errorName ? 'has-error' : ''}>
-				<input type="text" value={name} onChange={(e) => handleChangeName(e.target.value)} />
-			</div>
-			<button
-				onClick={handleSubmit}
-			>Submit</button>
-		</>
-	);
+	render() {
+		const { isModal, name, address } = this.state;
+
+		return (
+			<>
+				<button
+					onClick={() => this.handleChange({ isModal: true })}
+				>Submit</button>
+				<Modal
+					isModal={isModal}
+					name={name}
+					address={address}
+					handleChange={this.handleChange}
+				/>
+			</>
+		);
+	}
 }
-
 
 export default App;
